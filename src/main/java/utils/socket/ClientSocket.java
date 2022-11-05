@@ -1,17 +1,14 @@
 package utils.socket;
 
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class ClientSocket extends Thread {
     private Socket sendCommandSocket;
     private PrintWriter printWriter;
-    private String host;
-    private int port;
+    private final String host;
+    private final int port;
 
     public ClientSocket(String host, int port) throws IOException {
         this.host = host;
@@ -30,6 +27,7 @@ public class ClientSocket extends Thread {
     public String sendData(String stringToPrint) {
         boolean retry = true;
         int retryCount = 5;
+        StringBuffer stringBuffer = new StringBuffer();
         while (retry && retryCount >= 0) {
             try {
                 System.out.println("command is: " + stringToPrint);
@@ -41,15 +39,16 @@ public class ClientSocket extends Thread {
                 if (!stringToPrint.equals("quit_server")) {
                     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(this.sendCommandSocket.getInputStream()));
                     String readData = bufferedReader.readLine();
-                    if (readData != null) {
+                    if (readData != null && !readData.equals("")) {
                         while (!readData.equals("Return_Data_Over_JE")) {
+                            stringBuffer.append(readData);
                             System.out.println(readData);
                             System.out.flush();
                             readData = bufferedReader.readLine();
                         }
                     }
                     bufferedReader.close();
-                    this.sendCommandSocket.close();
+                    this.closeClient();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -57,7 +56,7 @@ public class ClientSocket extends Thread {
                 retryCount -= 1;
             }
         }
-        return "";
+        return stringBuffer.toString();
     }
 }
 
