@@ -3,6 +3,7 @@ package utils.process;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.List;
 
 public class OpenDriverProcess extends Thread {
@@ -13,10 +14,6 @@ public class OpenDriverProcess extends Thread {
     private Process process;
     // use to create process
     private List<String> processCommandList;
-    // use to read process output
-    private InputStreamReader driverProcessReader;
-    // use to read process error output
-    private InputStreamReader driverErrorReader;
 
     public OpenDriverProcess(String driverPath) {
         this.driverPath = driverPath;
@@ -52,15 +49,15 @@ public class OpenDriverProcess extends Thread {
                 ProcessBuilder processBuilder;
                 if (processCommandList == null ) {
                     processBuilder = new ProcessBuilder(this.driverPath);
+                    processBuilder.directory(new File(Path.of("").toAbsolutePath().toString()));
+                    processBuilder.inheritIO();
                 } else {
                     processBuilder = new ProcessBuilder(this.processCommandList);
+                    processBuilder.directory(new File(Path.of("").toAbsolutePath().toString()));
+                    processBuilder.inheritIO();
                 }
                 this.process = processBuilder.start();
-                driverProcessReader = new InputStreamReader(process.getInputStream());
-                driverErrorReader = new InputStreamReader(process.getErrorStream());
-                if (process != null) {
-                    while (process.isAlive()) {
-                    }
+                while (process.isAlive()) {
                 }
             }
         } catch (IOException e) {

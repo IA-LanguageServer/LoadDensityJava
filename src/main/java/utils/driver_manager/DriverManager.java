@@ -2,6 +2,7 @@ package utils.driver_manager;
 
 
 
+import bind.load_test.LoadTest;
 import utils.process.OpenDriverProcess;
 import utils.socket.ClientSocket;
 
@@ -16,21 +17,22 @@ public class DriverManager {
     private String host;
     private int port;
     public String driverPath;
+    public LoadTest loadTest = new LoadTest(this);
 
 
     private String setDriver(String host, int port, String platform){
         switch (platform) {
             case "windows":
                 if (this.driverPath == null)
-                    this.driverPath = Path.of("").toAbsolutePath() + "/generate_apitestka_driver_win64.exe";
+                    this.driverPath = Path.of("").toAbsolutePath() + "/generate_load_density_driver_win.exe";
                 break;
             case "linux":
                 if (this.driverPath == null)
-                    this.driverPath = Path.of("").toAbsolutePath() + "/generate_apitestka_driver_liinux";
+                    this.driverPath = Path.of("").toAbsolutePath() + "/generate_load_density_driver_liinux";
                 break;
             case "macos":
                 if (driverPath == null)
-                    this.driverPath = Path.of("").toAbsolutePath() + "/generate_apitestka_driver_macos";
+                    this.driverPath = Path.of("").toAbsolutePath() + "/generate_load_density_driver_macos";
                 break;
         }
         this.host = host;
