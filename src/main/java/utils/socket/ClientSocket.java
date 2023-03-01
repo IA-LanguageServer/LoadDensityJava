@@ -9,21 +9,29 @@ public class ClientSocket extends Thread {
     private PrintWriter printWriter;
     private final String host;
     private final int port;
-
+    /**
+     * @param host client connect host
+     * @param port client connect port
+     * @throws IOException: If we can't connect to socket server
+     */
     public ClientSocket(String host, int port) throws IOException {
         this.host = host;
         this.port = port;
         this.setDaemon(true);
     }
-
-
+    /**
+     * @throws IOException: If we can't close socket
+     */
     public void closeClient() throws IOException {
         if (sendCommandSocket != null && !sendCommandSocket.isClosed())
             sendCommandSocket.close();
         if (printWriter != null)
             printWriter.close();
     }
-
+    /**
+     * @param stringToPrint: socket will output this string use output stream
+     * @return all server response as string
+     */
     public String sendData(String stringToPrint) {
         boolean retry = true;
         int retryCount = 5;
